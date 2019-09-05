@@ -1,13 +1,13 @@
 import React from 'react';
-import { Link } from 'gatsby';
+import { Link, navigate } from 'gatsby';
 import { makeStyles } from '@material-ui/core/styles'; 
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import List from '@material-ui/core/List';
+import { Button } from '@material-ui/core';
 import Divider from '@material-ui/core/Divider';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
@@ -20,6 +20,7 @@ import { graphql, useStaticQuery } from "gatsby"
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
+    marginBottom: '1.5rem',
   },
   menuButton: {
     marginRight: theme.spacing(2),
@@ -90,7 +91,7 @@ export default () => {
         <LinkListItem to="/contact" content="Liên Hệ" key="contact"><PinDropOutlined /></LinkListItem>
       </List>
       <Divider />
-        <LinkListItem to="/buy-me-a-coffee" content="Buy me a coffe" key="buycoffee"><LocalCafeOutlined /></LinkListItem>
+        <LinkListItem to="/buy-me-a-coffee" content="Buy me a coffee" key="buycoffee"><LocalCafeOutlined /></LinkListItem>
     </div>
   );
 
@@ -102,7 +103,12 @@ export default () => {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title}>
-            <Link to="/" className={classes.link}><Button className={classes.logo}>{pageQuery.site.siteMetadata.title}</Button></Link>
+          <Button color="inherit" aria-label="menu" onClick={event => {
+            event.preventDefault()
+            // TODO: do something with form values
+            navigate("/")
+          }}>
+    {pageQuery.site.siteMetadata.title}</Button>
           </Typography>
           {/* <a href="" className={`${classes.link} ${classes.logo}`}><Button color="inherit">Login</Button></a> */}
         </Toolbar>

@@ -1,90 +1,66 @@
 import React from "react";
 import Layout from "../components/layout";
-import { makeStyles } from '@material-ui/core/styles';
+import { useStaticQuery, graphql, navigate } from "gatsby"
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Hidden from '@material-ui/core/Hidden';
+import ReactMarkdown from "react-markdown"
 
-
-const useStyles = makeStyles(theme => ({
-    root: {
-      marginTop: '1.5rem',
-      padding: theme.spacing(3, 2),
-    },
-    cardGrid: {
-        marginTop: '1rem',
-    }
-  }));
   
 export default () => {
-    const featuredPosts = [
-        {
-          title: 'Featured post',
-          date: 'Nov 12',
-          description:
-            'This is a wider card with supporting text below as a natural lead-in to additional content.',
-        },
-        {
-          title: 'Post title',
-          date: 'Nov 11',
-          description:
-            'This is a wider card with supporting text below as a natural lead-in to additional content.',
-        },
-        {
-            title: 'Featured post',
-            date: 'Nov 12',
-            description:
-              'This is a wider card with supporting text below as a natural lead-in to additional content.',
-          },
-          {
-            title: 'Post title',
-            date: 'Nov 11',
-            description:
-              'This is a wider card with supporting text below as a natural lead-in to additional content.',
-          },
-      ];
-    const classes = useStyles();
+
+  const Articles = useStaticQuery(graphql`
+  query ArticlesQuery {
+    allStrapiArticles {
+      edges {
+        node {
+          id
+          title
+          description
+          content
+          created_at(fromNow: true)
+        }
+      }
+    }
+  }
+  `)
     return (
         <Layout>
-            {/* Sub featured posts */}
-          <Grid container spacing={4} className={classes.cardGrid}>
-            {featuredPosts.map(post => (
-              <Grid item key={post.title} xs={12} md={6}>
-                <CardActionArea component="a" href="#">
-                  <Card className={classes.card}>
-                    <div className={classes.cardDetails}>
-                      <CardContent>
-                        <Typography component="h2" variant="h5">
-                          {post.title}
-                        </Typography>
-                        <Typography variant="subtitle1" color="textSecondary">
-                          {post.date}
-                        </Typography>
-                        <Typography variant="subtitle1" paragraph>
-                          {post.description}
-                        </Typography>
-                        <Typography variant="subtitle1" color="primary">
-                          Continue reading...
-                        </Typography>
-                      </CardContent>
-                    </div>
-                    <Hidden xsDown>
-                      <CardMedia
-                        className={classes.cardMedia}
-                        image="https://source.unsplash.com/random"
-                        title="Image title"
-                      />
-                    </Hidden>
-                  </Card>
-                </CardActionArea>
-              </Grid>
-            ))}
+          <Grid xs={12} md={12}>
+            <Typography variant="h6" color="textPrimary" component="p">
+              Danh Sách Bài Viết
+            </Typography>
           </Grid>
-          {/* End sub featured posts */}
+          {Articles.allStrapiArticles.edges.map(post => (
+            <Grid item key={post.node.title} xs={12} md={12}>
+              <CardActionArea onClick={event => {
+                event.preventDefault()
+                navigate(post.node.id)
+              }}>
+                <Card >
+                  <div >
+                    <CardContent>
+                      <Typography component="h2" variant="h5">
+                        {post.node.title}
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                      Posted at {post.node.created_at}
+                      </Typography>
+                      <Typography variant="subtitle1" paragraph>
+                        <ReactMarkdown source={post.node.description} />
+                      </Typography>
+                      <Typography variant="subtitle1" color="primary">
+                        Đọc Tiếp
+                      </Typography>
+                    </CardContent>
+                  </div>
+
+                </Card>
+              </CardActionArea>
+            </Grid>
+            ))}
         </Layout>
     )
 }

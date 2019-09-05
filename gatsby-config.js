@@ -13,6 +13,20 @@ module.exports = {
         ],
         display: 'swap'
       }
-    }
+    },
+    {
+      resolve: `gatsby-source-strapi`,
+      options: {
+        apiURL: `https://data.safedata.vn`,
+        queryLimit: 1000, // Default to 100
+        contentTypes: [`articles`],
+        // Possibility to login with a strapi user, when content types are not publically available (optional).
+        // loginData: {
+        //   identifier: "reader",
+        //   password: "5GRgSpUARvz7KhP",
+        // },
+      },
+    },
+
   ]
 }
